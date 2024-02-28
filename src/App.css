@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-green {
+  background-color: green;
+  border-radius: 20px;
+}
+
+.bg-yellow {
+  background-color: yellow;
+  border-radius: 20px;
+}
+
+.bg-red {
+  background-color: red;
+  border-radius: 20px;
+}
+
+.bg-grey {
+  background-color: grey;
+  border-radius: 20px;
+}
