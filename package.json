@@ -23,7 +23,7 @@
     "tailwindcss-animate": "^1.0.7",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4",
-    "webpack": "^5.90.3"
+    "webpack": "4.42.0"
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",

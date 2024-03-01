@@ -11,7 +11,7 @@ function App() {
   const [particulatesData, setParticulatesData] = useState([])
   const [domPol, setDomPol] = useState('')
 
-  const sqlite = require(sqlite3).verbose();
+  const sqlite = require('sqlite3').verbose();
   let sql;
   const db = new sqlite.Database('./aq.db', sqlite.OPEN_READWRITE,
     (err) => { if (err) console.error(error, 'sqlite Error!') })
