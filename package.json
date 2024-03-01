@@ -12,12 +12,13 @@
     "crypto-browserify": "^3.12.0",
     "fs": "^0.0.1-security",
     "lucide-react": "^0.325.0",
+    "node-polyfill-webpack-plugin": "^3.0.0",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-resizable-panels": "^2.0.5",
+    "react-resizable-panels": "^2.0.11",
     "react-scripts": "^3.0.1",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^5.1.6",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "util": "^0.12.5",
@@ -25,7 +26,7 @@
     "webpack": "^5.90.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,7 +46,10 @@
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ]
   },
   "browser": {
