@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   justify-content: center;
   align-items: center;
-}
+} */
 
 .bg-green {
   background-color: green;

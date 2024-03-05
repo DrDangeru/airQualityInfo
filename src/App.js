@@ -1,23 +1,48 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import CitySearch from "./citySearh";
-import { sqlite3 } from "sqlite3";
+//import { BarChart } from '@mui/x-charts/BarChart'; implement later
+//need to get the city from CitySearch
 
 function App() {
   const [error, setError] = useState("");
   const [airQualityData, setAirQualityData] = useState({});
   const [names, setNames] = useState([]);
   const [urls, setUrls] = useState([]);
-  const [particulatesData, setParticulatesData] = useState([])
-  const [domPol, setDomPol] = useState('')
+  const [particulatesData, setParticulatesData] = useState([]);
+  const [domPol, setDomPol] = useState('');
+  const [city, setCity] = useState('');
+  const [uemail, setEmail] = useState('');
+  const sqlite = require('sqlite');
 
-  const sqlite = require('sqlite3').verbose();
   let sql;
+
+  //CREATE TABLE w/t city , station , dataTime, particulatesData
   const db = new sqlite.Database('./aq.db', sqlite.OPEN_READWRITE,
-    (err) => { if (err) console.error(error, 'sqlite Error!') })
+    (err) => { if (err) console.error(error, 'sqlite Error!') });
+
+
+
+  // SAVE particulatesData TO TABLE
+  // READ particulatesData FROM TABLE
+  // DB would be server based... as it makes more sense...
+  // pretty sure aq.db would not pesist anything client side
+  // import sqlite3 from 'sqlite3'
+  // import { open } from 'sqlite'
+
+  // // this is a top-level await 
+  // (async () => {
+  //   // open the database
+  //   const db = await open({
+  //     filename: '/tmp/database.db',
+  //     driver: sqlite3.Database
+  //   })
+  // })()
+  // OPT DELETE FROM TABLE
 
   const GetAirQuality = async (city) => {
-
+    setCity(city);
+    console.log('this city', city)
     //   useEffect(() => {
     //   // Assuming you want to fetch data when the component mounts
     //   GetAirQuality("Sofia");
@@ -67,8 +92,6 @@ function App() {
     console.log("Air Quality Data:", airQualityData);
   };
 
-
-
   function advisoryColor(aqi) {
     switch (true) {
       case aqi < 50:
@@ -82,10 +105,12 @@ function App() {
     }
   }
 
-  // CREATE Table if user 
-  // sql = `CREATE TABLE users(ID INTEGER PRIMARY KEY, username, last_name,
-  //   first_name, email, data_date, data)`
-  // db.run(sql)
+  function handleEmail(e, email) {
+    e.preventDefault();
+    setEmail(email);
+    console.log(uemail)
+  }
+
 
   const getBackgroundColorClass = () => {
     const color = advisoryColor(airQualityData.aqi);
@@ -93,43 +118,42 @@ function App() {
   };
 
   return (
+    <div className="grid grid-cols-3">
 
-    <div className="leading-6 bg-[url('/public/gonzalo-facello-TLb0Sax_oZI-unsplash.jpg')]">
-      <h1 className="text-blue-500 text-5xl font-italic p-8 pl-32 text-center align-items-center ">
-        Air Quality Index Checker</h1>
+      <div className="col-span-3">
+        <div className="text-red-400underline decoration-sky-600 hover:decoration-blue-400"> TEST </div>
+        <div className="bg-[url('/public/gonzalo-facello-TLb0Sax_oZI-unsplash.jpg')">
+          <h1 className="text-blue-500 text-5xl font-italic p-8 pl-32 text-center align-items-center ">
+            Air Quality Index Checker</h1>
 
-      <CitySearch GetAirQuality={GetAirQuality} />
-      <div
-        direction="horizontal"
-        className="max-w-90 rounded-lg border"
-      >
-        <div defaultSize={100} collapsible="false">
-          <div className="flex flex-col items-end justify-center p-4 gap-7  ">
-            <span className="text-4xl min-w-full font-semibold text-gray-700 pt-8 pl-6 bg-gradient-to-r from-blue-100 to-green-300 rounded-xl
+          <CitySearch GetAirQuality={GetAirQuality} />
+
+          < div className="flex-1 bg-blue-500 p-4">
+            <div className="flex flex-col items-end justify-center p-4 gap-7  ">
+              <span className="text-4xl min-w-full font-semibold text-gray-700 pt-8 pl-6 bg-gradient-to-r from-blue-100 to-green-300 rounded-xl
             text-decoration-line : underline ">
-              Rating for {airQualityData.city
-                && airQualityData.city.name}
+                Rating for {airQualityData.city
+                  && airQualityData.city.name}
 
-              <div className="text-end align-items-center font-semibold text-4xl pt-8 pl-6 text-decoration-line: underline">
-                Pollution PPM  {airQualityData.aqi}
-              </div>
-            </span>
-            <div className="text-center text-4xl content-center pt-8 pl-6 text-red-600 
+                <div className="text-end align-items-center font-semibold text-4xl pt-8 pl-6 text-decoration-line: underline">
+                  Pollution PPM  {airQualityData.aqi}
+                </div>
+              </span>
+              <div className="text-center text-4xl content-center pt-8 pl-6 text-red-600 
             text-decoration-line: overline ">Particulates</div>
-            <ul>
-              {particulatesData.map(({ name, value }, index) => (
-                <li key={index} className="text-orange-200/75
+              <ul className="list-disc list-outside hover:list-inside">
+                {particulatesData.map(({ name, value }, index) => (
+                  <li key={index} className="text-orange-200/75
                 text-decoration-line: underline">
-                  {name}: {value}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div />
-        <div defaultSize={25}>
-          <div direction="vertical">
-            <div defaultSize={25} className={getBackgroundColorClass()}>
+                    {name}: {value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ div>
+          <div className="flex-shrink-0 w-1/4 bg-gray-300 p-4">
+
+            <div className={getBackgroundColorClass()}>
               <div className="flex h-full items-center justify-center p-2 rounded-xl">
                 <span className="text-center p-2  font-bold {getBackgroundColorClass()} text-decoration-line: underline " >    Advisory <br />
                   <span className="font-light animate-pulse"> GREEN
@@ -139,34 +163,40 @@ function App() {
                   <span className="font-light animate-pulse"> RED
                     Pollution is HIGH!!!  </span>
                 </span>
+
               </div>
-            </div>
-            <div />
-            <div defaultSize={25}>
-              <div className=" text-center content-center font-semibold text-2xl pt-20 pl-6 text-blue-600 
+              <div />
+              <div className="flex-shrink-0 w-1/4 bg-gray-300 p-4">
+                <div className=" text-center content-center font-semibold text-2xl pt-20 pl-6 text-blue-600 
             text-decoration-line: overline bg-gradient-to-r from-blue-100 to-green-300 rounded-xl ">Dominant Polutant {domPol}</div>
 
+              </div>
             </div>
           </div>
+          <form onSubmit={(e) => handleEmail(e, email)}>
+            <textarea
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Please enter your email to save the data for future review!"
+            ></textarea>
+            <button type="submit">Confirm email</button>
+          </form>
+
         </div>
+        <footer className="text-xl">
+          Data courtesy of {names.map((name, index) => (
+          <span key={index}>
+            <a href={urls[index]} target="_blank" rel="noopener noreferrer">
+              {name}
+            </a>
+            {index < names.length - 1 && ", "}
+          </span>
+        ))}
+
+          <footer className="text-xl">Photo by <a href="https://unsplash.com/@gonchifacello?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Gonzalo Facello</a> on <a href="https://unsplash.com/photos/a-building-with-a-green-door-and-window-TLb0Sax_oZI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+          </footer>
+        </footer>
       </div>
-      {error && (
-        <div className="">
-          !!!  ERROR ERROR ERROR !!!{error}</div>
-      )}
-      {/* <footer>Data courtesy of {names.join(", ")}</footer> */}
-      <footer className="text-xl">
-        Data courtesy of {names.map((name, index) => (
-        <span key={index}>
-          <a href={urls[index]} target="_blank" rel="noopener noreferrer">
-            {name}
-          </a>
-          {index < names.length - 1 && ", "}
-        </span>
-      ))}
-      </footer>
-      <footer className="text-xl">Photo by <a href="https://unsplash.com/@gonchifacello?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Gonzalo Facello</a> on <a href="https://unsplash.com/photos/a-building-with-a-green-door-and-window-TLb0Sax_oZI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-      </footer>
     </div>
   );
 }
